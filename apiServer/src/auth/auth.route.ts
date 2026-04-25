@@ -7,4 +7,6 @@ const route = Router()
 route.post("/signup",authcontroller.signup)
 
 route.post("/login",authcontroller.login)
+
+route.post("/contributor",authcontroller.contributor)
 export default route;

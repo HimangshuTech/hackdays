@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 export const Authservice = {
   //SIGNUP ADDED
-  async signup(name, password, email) {
+  async signup(name, email, password) {
     try {
       const emailexist = await prisma.user.findFirst({
         where: {
@@ -60,5 +60,39 @@ export const Authservice = {
     } catch (error) {
       throw error;
     }
+  },
+  async contributor(email, password) {
+  try {
+    const user = await prisma.user.findFirst({
+      where: { email }
+    });
+
+    if (!user) {
+      throw new Error("User not exist");
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return;
+    }
+
+    // UPDATE ROLE HERE
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        userType: "CONTRIBUTOR"
+      },
+      select: {
+        email: true,
+        userType: true
+      }
+    });
+
+    return updatedUser;
+
+  } catch (error) {
+    throw error;
   }
+}
 }
