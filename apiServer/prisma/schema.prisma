@@ -6,3 +6,36 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum usertype {
+  USER
+  CONTRIBUTOR
+}
+
+enum postType {
+  PLACE
+  EVENT
+  SERVICE
+}
+
+model User {
+  id       String   @id @default(uuid())
+  name     String
+  email    String
+  password String
+  createAt DateTime @default(now())
+  userType usertype @default(USER)
+  posts    Post[]
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  place       String
+  description String
+  postType    postType
+  img         String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
