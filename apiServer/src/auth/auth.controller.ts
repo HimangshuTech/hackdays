@@ -20,11 +20,11 @@ const signup = async (req, res) => {
   return res.status(201).json({ name: user.name, email: user.email })
 }
 
-const login = async (req,res)=>{
+const login = async (req, res) => {
   const parse = loginSchema.safeParse(req.body);
-  const {email,password}=parse.data;
-  const user = await Authservice.login(email,password);
-  return res.status(201).json({email : user.email});
+  const { email, password } = parse.data;
+  const user = await Authservice.login(email, password);
+  return res.status(201).json({ email: user.email });
 }
 export default {
   signup,

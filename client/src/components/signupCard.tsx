@@ -28,7 +28,7 @@ export default function SignUpCard() {
     catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         console.log(err)
-        setError(err.response?.data?.message || "Login failed")
+        setError(err.response?.data?.message || "signup failed")
       } else {
         setError("Something went wrong")
       }
