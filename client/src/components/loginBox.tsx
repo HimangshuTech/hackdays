@@ -13,13 +13,13 @@ export default function LoginBox() {
       <input
         type="email"
         placeholder="email"
-        className="w-full px-4 py-2 rounded-md bg-gray-600 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-2 rounded-md bg-gray-600 text-white placeholder-gray-220 outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <input
         type="password"
         placeholder="password"
-        className="w-full px-4 py-2 rounded-md bg-gray-600 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-2 rounded-md bg-gray-600 text-white placeholder-gray-200 outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button
         type="submit"
