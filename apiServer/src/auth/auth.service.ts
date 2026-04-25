@@ -1,98 +1,145 @@
-import { prisma } from "../db/client"
+import { prisma } from "../db/client";
 import bcrypt from "bcrypt";
+import { usertype } from "../../prisma/generated/enums";
+import { generateToken } from "../utils/jwt";
 
 export const Authservice = {
-  //SIGNUP ADDED
+  // User Signup
   async signup(name, email, password) {
     try {
-      const emailexist = await prisma.user.findFirst({
-        where: {
-          email: email
-        }
-      })
+      const emailexist = await prisma.user.findUnique({
+        where: { email }
+      });
 
       if (emailexist) {
-        throw new Error("User already exist")
+        throw new Error("User already exist");
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = await prisma.user.create({
         data: {
-          name: name,
-          email: email,
-          password: hashedPassword
+          name,
+          email,
+          password: hashedPassword,
+          userType: usertype.USER
         },
         select: {
+          id: true,
           name: true,
-          email: true
+          email: true,
+          userType: true
         }
-      })
+      });
 
       return user;
-
     } catch (error) {
       throw error;
     }
   },
 
-  //LOGIN ADDED
+  // Contributor Signup
+  async contributorSignup(name, email, password) {
+    try {
+      const emailexist = await prisma.user.findUnique({
+        where: { email }
+      });
+
+      if (emailexist) {
+        throw new Error("User already exist");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          userType: usertype.CONTRIBUTOR
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          userType: true
+        }
+      });
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // User Login
   async login(email, password) {
     try {
-      const user = await prisma.user.findFirst({
+      const user = await prisma.user.findUnique({
         where: { email }
       });
 
       if (!user) {
-        throw new Error("User not exist") 
+        throw new Error("User not exist");
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return;
+        throw new Error("Invalid credentials");
       }
 
-      return {
-        email: user.email
-      };
+      const token = generateToken(user);
 
+      return {
+        user: {
+          id: user.id,
+          email: user.email,
+          userType: user.userType
+        },
+        token
+      };
     } catch (error) {
       throw error;
     }
   },
+
+  // Contributor Login
   async contributor(email, password) {
-  try {
-    const user = await prisma.user.findFirst({
-      where: { email }
-    });
+    try {
+      const user = await prisma.user.findUnique({
+        where: { email }
+      });
 
-    if (!user) {
-      throw new Error("User not exist");
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return;
-    }
-
-    // UPDATE ROLE HERE
-    const updatedUser = await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        userType: "CONTRIBUTOR"
-      },
-      select: {
-        email: true,
-        userType: true
+      if (!user) {
+        throw new Error("User not exist");
       }
-    });
 
-    return updatedUser;
+      const isMatch = await bcrypt.compare(password, user.password);
 
-  } catch (error) {
-    throw error;
+      if (!isMatch) {
+        throw new Error("Invalid credentials");
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          userType: usertype.CONTRIBUTOR
+        }
+      });
+
+      const token = generateToken(updatedUser);
+
+      return {
+        user: {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          userType: updatedUser.userType
+        },
+        token
+      };
+    } catch (error) {
+      throw error;
+    }
   }
-}
-}
+};
