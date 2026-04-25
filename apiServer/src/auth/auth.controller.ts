@@ -15,7 +15,7 @@ const loginSchema = z.object({
 
 const signup = async (req: Request, res: Response) => {
   const parse = signupSchema.safeParse(req.body);
-
+  ;
   if (!parse.success) {
     return res.status(400).json(parse.error);
   }
