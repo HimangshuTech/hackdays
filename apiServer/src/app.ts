@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import router from './routes/index';
 import "dotenv/config";
+import cookieParser from 'cookie-parser';
 
 import cors from "cors";
 
@@ -18,12 +19,17 @@ app.use(express.json());
 
 app.use(bodyParser.json());
 
+app.use(express.json());
+
+app.use(cookieParser());
+
+
 app.use('/api/', router);
 
 app.get('/health', (req, res) => {
   res.json({ ok: true });
 });
 
-app.use(express.json());
+
 
 export default app;
