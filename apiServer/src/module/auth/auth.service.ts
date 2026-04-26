@@ -1,7 +1,7 @@
-import { prisma } from "../db/client";
+import { prisma } from "../../db/client";
 import bcrypt from "bcrypt";
-import { usertype } from "../../prisma/generated/enums";
-import { generateToken } from "../utils/jwt";
+import { usertype } from "../../../prisma/generated/enums";
+import { generateToken } from "../../utils/jwt";
 
 export const Authservice = {
   // User Signup
