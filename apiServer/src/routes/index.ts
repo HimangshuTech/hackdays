@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import authRouter from '../auth/auth.route';
-import postRouter from '../post/post.router'
+import authRouter from '../module/auth/auth.route';
+import postRouter from '../module/post/post.router'
 
 const router = Router();
 
