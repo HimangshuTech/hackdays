@@ -17,18 +17,13 @@ const loginSchema = z.object({
 
 // User Signup
 const signup = async (req: Request, res: Response) => {
-feature/auth-login
   try {
+
     const parse = signupSchema.safeParse(req.body);
 
     if (!parse.success) {
       return res.status(400).json(parse.error);
     }
-  const parse = signupSchema.safeParse(req.body);
-  ;
-  if (!parse.success) {
-    return res.status(400).json(parse.error);
-  }
 
     const { name, email, password } = parse.data;
 
@@ -44,7 +39,7 @@ feature/auth-login
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.userType
+      role: user.usertype
     });
 
   } catch (error: any) {
@@ -75,7 +70,7 @@ const contributorSignup = async (req: Request, res: Response) => {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.userType
+      role: user.usertype
     });
 
   } catch (error: any) {
@@ -105,7 +100,7 @@ const login = async (req: Request, res: Response) => {
     return res.status(200).json({
       id: user.id,
       email: user.email,
-      role: user.userType
+      role: user.usertype
     });
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
@@ -134,7 +129,7 @@ const contributor = async (req: Request, res: Response) => {
     return res.status(200).json({
       id: user.id,
       email: user.email,
-      role: user.userType
+      role: user.usertype
     });
   } catch (error: any) {
     return res.status(400).json({ message: error.message });

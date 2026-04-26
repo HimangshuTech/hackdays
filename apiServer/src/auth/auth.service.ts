@@ -6,80 +6,80 @@ import { generateToken } from "../utils/jwt";
 export const Authservice = {
   // User Signup
   async signup(name, email, password) {
-  try {
-    const emailexist = await prisma.user.findUnique({
-      where: { email }
-    });
+    try {
+      const emailexist = await prisma.user.findUnique({
+        where: { email }
+      });
 
-    if (emailexist) {
-      throw new Error("User already exist");
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        userType: usertype.USER
+      if (emailexist) {
+        throw new Error("User already exist");
       }
-    });
 
-    const token = generateToken(user);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        userType: user.userType
-      },
-      token
-    };
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          usertype: usertype.USER
+        }
+      });
 
-  } catch (error) {
-    throw error;
-  }
-},
+      const token = generateToken(user);
+
+      return {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          usertype: user.usertype
+        },
+        token
+      };
+
+    } catch (error) {
+      throw error;
+    }
+  },
 
   async contributorSignup(name, email, password) {
-  try {
-    const emailexist = await prisma.user.findUnique({
-      where: { email }
-    });
+    try {
+      const emailexist = await prisma.user.findUnique({
+        where: { email }
+      });
 
-    if (emailexist) {
-      throw new Error("User already exist");
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        userType: usertype.CONTRIBUTOR
+      if (emailexist) {
+        throw new Error("User already exist");
       }
-    });
 
-    const token = generateToken(user);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        userType: user.userType
-      },
-      token
-    };
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          usertype: usertype.CONTRIBUTOR
+        }
+      });
 
-  } catch (error) {
-    throw error;
-  }
-},
+      const token = generateToken(user);
+
+      return {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          usertype: user.usertype
+        },
+        token
+      };
+
+    } catch (error) {
+      throw error;
+    }
+  },
   // User Login
   async login(email, password) {
     try {
@@ -103,7 +103,7 @@ export const Authservice = {
         user: {
           id: user.id,
           email: user.email,
-          userType: user.userType
+          usertype: user.usertype
         },
         token
       };
@@ -132,7 +132,7 @@ export const Authservice = {
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
-          userType: usertype.CONTRIBUTOR
+          usertype: usertype.CONTRIBUTOR
         }
       });
 
@@ -142,7 +142,7 @@ export const Authservice = {
         user: {
           id: updatedUser.id,
           email: updatedUser.email,
-          userType: updatedUser.userType
+          usertype: updatedUser.usertype
         },
         token
       };
