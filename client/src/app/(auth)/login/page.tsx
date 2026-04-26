@@ -1,4 +1,5 @@
 "use client"
+
 import LoginCard from "@/components/loginCard"
 
 export default function Login() {
@@ -7,7 +8,6 @@ export default function Login() {
       <div className="w-lg">
         <LoginCard></LoginCard>
       </div>
-
     </div>
   )
 

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 //import { usertype } from "../../prisma/generated/enums"; //not needed
 
 const SECRET = process.env.JWT_SECRECT_KEY;
