@@ -1,12 +1,16 @@
-import { Router } from 'express';
+import { Router } from "express";
+import authcontroller from "../auth/auth.controller";
+import {authMiddleware} from "../middleware/auth.middleware";
+const route = Router();
 
-import authcontroller from "../auth/auth.controller"
+route.post("/signup", authcontroller.signup);
 
-const route = Router()
+route.post("/login", authcontroller.login);
 
-route.post("/signup",authcontroller.signup)
+route.post("/contributor", authcontroller.contributor);
 
-route.post("/login",authcontroller.login)
+route.post("/contributorSignup", authcontroller.contributorSignup);
 
-route.post("/contributor",authcontroller.contributor)
+route.get("/getme",authMiddleware,authcontroller.getme)
+
 export default route;
