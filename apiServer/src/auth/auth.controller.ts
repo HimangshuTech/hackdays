@@ -26,13 +26,21 @@ const signup = async (req: Request, res: Response) => {
 
     const { name, email, password } = parse.data;
 
-    const user = await Authservice.signup(name, email, password);
+    const { user, token } = await Authservice.signup(name, email, password);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax"
+    });
 
     return res.status(201).json({
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      role: user.userType
     });
+
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
@@ -49,13 +57,21 @@ const contributorSignup = async (req: Request, res: Response) => {
 
     const { name, email, password } = parse.data;
 
-    const user = await Authservice.contributorSignup(name, email, password);
+    const { user, token } = await Authservice.contributorSignup(name, email, password);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax"
+    });
 
     return res.status(201).json({
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      role: user.userType
     });
+
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
@@ -77,7 +93,7 @@ const login = async (req: Request, res: Response) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "strict"
+      sameSite: "lax"
     });
 
     return res.status(200).json({
@@ -119,9 +135,28 @@ const contributor = async (req: Request, res: Response) => {
   }
 };
 
+
+const getme = async (req: Request, res: Response) => {
+  const user = (req as any).user;
+
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { id, name, email, userType } = user;
+
+  return res.status(200).json({
+    id,
+    name,
+    email,
+    usetType: userType
+  });
+};
+
 export default {
   signup,
   login,
   contributor,
-  contributorSignup
+  contributorSignup,
+  getme
 };

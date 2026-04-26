@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authcontroller from "../auth/auth.controller";
-
+import {authMiddleware} from "../middleware/auth.middleware";
 const route = Router();
 
 route.post("/signup", authcontroller.signup);
@@ -10,5 +10,7 @@ route.post("/login", authcontroller.login);
 route.post("/contributor", authcontroller.contributor);
 
 route.post("/contributorSignup", authcontroller.contributorSignup);
+
+route.get("/getme",authMiddleware,authcontroller.getme)
 
 export default route;
