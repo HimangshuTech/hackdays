@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"
 import axios from "axios";
 
-export default function contributorSignup() {
+export default function ContributorSignupCard() {
 
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
