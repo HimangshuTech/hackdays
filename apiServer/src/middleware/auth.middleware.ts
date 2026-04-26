@@ -1,6 +1,8 @@
+import { JwtPayload } from "jsonwebtoken";
 import { verifyToken } from "../utils/jwt";
+import { Request, Response, NextFunction } from "express";
 
-export const authMiddleware = (req, res, next) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies?.token;
 
@@ -8,7 +10,7 @@ export const authMiddleware = (req, res, next) => {
       return res.status(401).json({ message: "No token" });
     }
 
-    const decoded = verifyToken(token);
+    const decoded: string | JwtPayload = verifyToken(token);
 
     req.user = decoded;
 
