@@ -60,10 +60,11 @@ model Post {
 }
 
 model PostImage {
-  id     String @id @default(uuid())
-  url    String
-  postId String
-  order  Int? // optional: for image (cover image, etc.)
+  id       String @id @default(uuid())
+  url      String
+  publicId String
+  postId   String
+  order    Int? // optional: for image (cover image, etc.)
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
