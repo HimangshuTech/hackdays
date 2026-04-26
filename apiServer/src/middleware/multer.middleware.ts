@@ -1,6 +1,5 @@
 //this is multer middleware for storing the uploaded image by user temporary
 //on disk before sending to cloudinary
-// e
 
 import multer from 'multer';
 import path from 'path';
