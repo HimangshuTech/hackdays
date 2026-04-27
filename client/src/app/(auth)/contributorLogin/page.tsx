@@ -1,7 +1,7 @@
 "use client"
 import ContributorCard from "@/components/contributorCard"
 
-export default function Contributor() {
+export default function ContributorLoign() {
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="w-lg">

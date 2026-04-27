@@ -45,7 +45,7 @@ export default function ContributorSignupCard() {
       className="kw-full max-w-xl bg-white p-8 rounded-2xl shadow-md border border-gray-200 flex flex-col gap-5"
     >
       <h1 className="text-gray-800 font-semibold text-2xl text-center">
-        Enter your Details
+        Sign up as a Contributor
       </h1>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -80,6 +80,10 @@ export default function ContributorSignupCard() {
       >
         {loading ? "Signing up..." : "Sign Up"}
       </button>
+      <div className="text-center">
+        Already have an acount? <a className="underline text-blue-500" href="/contributorLogin">Login</a>
+
+      </div>
     </form>
   );
 }

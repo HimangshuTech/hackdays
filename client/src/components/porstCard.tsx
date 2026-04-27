@@ -1,31 +1,42 @@
 "use client"
 
-import Image from "next/image"
+import Image from "next/image";
 
-export default function PostCard() {
+type PostCardType = {
+  title: string;
+  image: string;
+  name: string;
+  postType: "PLACE" | "EVENT" | "SERVICE";
+};
+
+export default function PostCard({
+  title,
+  image,
+  name,
+  postType,
+}: PostCardType) {
   return (
-    <div className="w-75 rounded-2xl overflow-hidden bg-emerald-600 text-white relative">
+    <div className="w-full rounded-2xl overflow-hidden bg-emerald-600 text-white relative cursor-pointer transition-transform duration-300 ease-in-out hover:scale-[1.04]">
 
-      {/* Overlay */}
       <div className="absolute top-3 left-3 z-10 bg-black/50 backdrop-blur px-3 py-1 rounded-md text-sm font-medium">
-        PLACE
+        {postType}
       </div>
 
       {/* Image */}
       <Image
-        width={1000}
-        height={1000}
-        alt="image"
-        src="/img/1.jpg"
+        width={500}
+        height={500}
+        alt={title}
+        src={image} // fallback
         className="w-full aspect-4/5 object-cover"
       />
 
       {/* Content */}
       <div className="p-3">
-        <div className="font-bold text-lg">MAJOLI</div>
-        <div className="text-sm opacity-80">By ADMIN</div>
+        <div className="font-bold text-lg line-clamp-2">{title}</div>
+        <div className="text-sm opacity-80">By {name}</div>
       </div>
 
     </div>
-  )
+  );
 }
