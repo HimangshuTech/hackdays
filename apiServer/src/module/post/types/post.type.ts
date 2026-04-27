@@ -36,6 +36,8 @@ export type EventPostInput = BasePostInput & {
   event: {
     startTime: string; // ISO
     endTime: string;
+    budgetMin?: number;  // optional range
+    budgetMax?: number;
   };
 };
 

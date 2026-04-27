@@ -10,28 +10,27 @@ export default function DashBoard() {
     title: "",
     description: "",
     postType: "PLACE",
+
     state: "",
     locationName: "",
     latitude: "",
     longitude: "",
+
     types: "",
     activities: "",
-  });
+
+    startTime: "",
+    endTime: "",
+
+    price: "",
+    budgetMin: "",
+    budgetMax: "",
+    contactInfo: "",
+  })
 
   const [images, setImages] = useState<File[]>([]);
 
-
-
-  const [event, setEvent] = useState("")
-
-  const [place, setPlace] = useState("")
-
-  const [service, setService] = useState("")
-
-
-
-
-
+  // ---------------- HANDLER ----------------
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -39,9 +38,15 @@ export default function DashBoard() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleTypeChange = (type: "PLACE" | "EVENT" | "SERVICE") => {
+    setForm((prev) => ({ ...prev, postType: type }));
+  };
+
+  // ---------------- SUBMIT ----------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Basic validation
     if (!form.title || !form.description || !form.locationName || !form.state) {
       alert("Please fill all required fields");
       return;
@@ -54,13 +59,13 @@ export default function DashBoard() {
 
     const formData = new FormData();
 
-    // Basic fields
+    // ---------- BASE ----------
     formData.append("title", form.title);
     formData.append("description", form.description);
     formData.append("postType", form.postType);
     formData.append("state", form.state);
 
-    // Location
+    // ---------- LOCATION ----------
     formData.append(
       "location",
       JSON.stringify({
@@ -70,31 +75,81 @@ export default function DashBoard() {
       })
     );
 
-    formData.append(
-      "metadata",
-      JSON.stringify({
-        types: form.types
-          ? form.types.split(",").map((t) => t.trim()).filter(Boolean)
-          : [],
-        activities: form.activities
-          ? form.activities.split(",").map((a) => a.trim()).filter(Boolean)
-          : [],
-      })
-    );
+    // ---------- TYPE SPECIFIC ----------
+    if (form.postType === "PLACE") {
+      formData.append(
+        "metadata",
+        JSON.stringify({
+          types: form.types
+            ? form.types.split(",").map((t) => t.trim()).filter(Boolean)
+            : [],
+          activities: form.activities
+            ? form.activities.split(",").map((a) => a.trim()).filter(Boolean)
+            : [],
+        })
+      );
+    }
+
+    if (form.postType === "EVENT") {
+
+      if (!form.startTime || !form.endTime) {
+        alert("Please select start and end date");
+        return;
+      }
+
+      if (form.endTime <= form.startTime) {
+        alert("End date must be after start date");
+        return;
+      }
+      formData.append(
+        "event",
+        JSON.stringify({
+          startTime: form.startTime,
+          endTime: form.endTime,
+          budgetMin: form.budgetMin ? Number(form.budgetMin) : null,
+          budgetMax: form.budgetMax ? Number(form.budgetMax) : null,
+        })
+      );
+      formData.append(
+        "metadata",
+        JSON.stringify({
+          types: form.types
+            ? form.types.split(",").map((t) => t.trim()).filter(Boolean)
+            : [],
+          activities: form.activities
+            ? form.activities.split(",").map((a) => a.trim()).filter(Boolean)
+            : [],
+        })
+      );
+    }
+
+    if (form.postType === "SERVICE") {
+      formData.append(
+        "service",
+        JSON.stringify({
+          price: form.price ? Number(form.price) : null,
+          budgetMin: form.budgetMin ? Number(form.budgetMin) : null,
+          budgetMax: form.budgetMax ? Number(form.budgetMax) : null,
+          contactInfo: form.contactInfo || null,
+        })
+      );
+    }
 
     images.forEach((file) => {
-      formData.append("Images", file);
+      formData.append("Images", file); // ✔ matches your backend
     });
 
-    console.log("Submitting FormData:");
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
+    //debugingg
+    console.log("Submitting:");
+    for (const [k, v] of formData.entries()) {
+      console.log(k, v);
     }
 
     try {
       const res = await api.post("api/post/create", formData);
       console.log(res.data);
 
+      // Reset form
       setForm({
         title: "",
         description: "",
@@ -105,9 +160,15 @@ export default function DashBoard() {
         longitude: "",
         types: "",
         activities: "",
+        startTime: "",
+        endTime: "",
+        price: "",
+        budgetMin: "",
+        budgetMax: "",
+        contactInfo: "",
       });
-      setImages([]);
 
+      setImages([]);
     } catch (err) {
       console.error(err);
     }
@@ -115,44 +176,31 @@ export default function DashBoard() {
 
   return (
     <div className="min-h-screen p-6 flex justify-center">
-
-
-
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-2xl space-y-4"
       >
-
-
         <h2 className="text-xl font-semibold text-center">CONTRIBUTE</h2>
 
-        <p className="text-sm text-gray-500  text-center">
-          select type of the contributiion        </p>
-        <div className="flex flex-row gap-5 items-center justify-center">
-
-          <div
-            className="cursor-pointer hover:bg-green-200 p-2 rounded-lg"
-            onClick={() => setPlace("PLACE")}
-          >
-            PLACE
-          </div>
-          <div
-            className="cursor-pointer hover:bg-green-200 p-2 rounded-lg"
-            onClick={() => setEvent("EVENT")}
-          >
-            EVENT
-          </div>
-
-          <div
-            className="cursor-pointer hover:bg-green-200 p-2 rounded-lg"
-            onClick={() => setService("SERVICE")}
-          >
-            SERVICE
-          </div>
-
+        {/* TYPE */}
+        <div className="flex gap-5 justify-center">
+          {["PLACE", "EVENT", "SERVICE"].map((type) => (
+            <div
+              key={type}
+              onClick={() =>
+                handleTypeChange(type as "PLACE" | "EVENT" | "SERVICE")
+              }
+              className={`cursor-pointer p-2 rounded-lg border ${form.postType === type
+                ? "bg-green-300"
+                : "hover:bg-green-200"
+                }`}
+            >
+              {type}
+            </div>
+          ))}
         </div>
 
-        {/* Title */}
+        {/* BASE */}
         <input
           name="title"
           value={form.title}
@@ -161,7 +209,6 @@ export default function DashBoard() {
           className="w-full border p-2 rounded"
         />
 
-        {/* Description */}
         <textarea
           name="description"
           value={form.description}
@@ -170,11 +217,10 @@ export default function DashBoard() {
           className="w-full border p-2 rounded"
         />
 
-        {/* Location */}
         <input
           name="locationName"
           value={form.locationName}
-          placeholder="Place's Name"
+          placeholder="Place Name"
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
@@ -182,38 +228,128 @@ export default function DashBoard() {
         <input
           name="state"
           value={form.state}
-          placeholder="State Name"
+          placeholder="State"
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
 
-        {/* Types */}
-        <h1 className="font-medium">Write the type of the Place:</h1>
-        <input
-          name="types"
-          value={form.types}
-          placeholder="Eco, natural, cultural..."
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
+        {/* PLACE */}
+        {form.postType === "PLACE" && (
+          <>
+            <input
+              name="types"
+              value={form.types}
+              placeholder="Eco, cultural..."
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
 
-        {/* Activities */}
-        <h1 className="font-medium">
-          Write the activities that can be done:
-        </h1>
-        <input
-          name="activities"
-          value={form.activities}
-          placeholder="Cycling, rafting, trekking..."
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
+            <input
+              name="activities"
+              value={form.activities}
+              placeholder="Trekking, rafting..."
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+          </>
+        )}
 
-        {/* Upload */}
+        {/* EVENT */}
+        {form.postType === "EVENT" && (
+          <>
+            <input
+              name="types"
+              value={form.types}
+              placeholder="Eco, cultural..."
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <input
+              name="activities"
+              value={form.activities}
+              placeholder="Trekking, rafting..."
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <input
+              name="budgetMin"
+              value={form.budgetMin}
+              placeholder="Min Budget"
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <input
+              name="budgetMax"
+              value={form.budgetMax}
+              placeholder="Max Budget"
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <h1>Starting date:</h1>
+            <input
+              type="date"
+              name="startTime"
+              value={form.startTime}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <h1>Ending date:</h1>
+            <input
+              type="date"
+              name="endTime"
+              value={form.endTime}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+          </>
+        )}
+
+        {/* SERVICE */}
+        {form.postType === "SERVICE" && (
+          <>
+            <input
+              name="price"
+              value={form.price}
+              placeholder="Fixed Price"
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <input
+              name="budgetMin"
+              value={form.budgetMin}
+              placeholder="Min Budget"
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <input
+              name="budgetMax"
+              value={form.budgetMax}
+              placeholder="Max Budget"
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+            <input
+              name="contactInfo"
+              placeholder="Contact (phone / email / link)"
+              value={form.contactInfo}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            />
+          </>
+        )}
+
+        {/* IMAGE */}
         <UploadImageCard onAction={(files) => setImages(files)} />
 
-        {/* Preview */}
-        <div className="grid grid-cols-3 gap-2 mt-3">
+        {/* PREVIEW */}
+        <div className="grid grid-cols-3 gap-2">
           {images.map((file, i) => (
             <Image
               key={i}
@@ -226,14 +362,7 @@ export default function DashBoard() {
           ))}
         </div>
 
-        {/* Note */}
-        <p className="text-sm text-gray-500">
-          Use clear types, relevant activities, and a detailed description to
-          improve reach and help like-minded users discover your post.
-        </p>
-
-        {/* Submit */}
-        <button className="bg-black text-white px-4 py-2 rounded w-full">
+        <button className="bg-black text-white px-4 py-2 rounded w-full cursor-pointer">
           Upload
         </button>
       </form>

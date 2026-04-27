@@ -25,6 +25,8 @@ export const PostService = {
     if (body.postType === "EVENT") {
       const start = new Date(body.event!.startTime);
       const end = new Date(body.event!.endTime);
+      const max = body.event!.budgetMax;
+      const min = body.event!.budgetMin;
 
       if (isNaN(start.getTime()) || isNaN(end.getTime())) {
         throw new Error("Invalid event dates");
@@ -34,50 +36,62 @@ export const PostService = {
         create: {
           startTime: start,
           endTime: end,
-        },
+          budgetMin: min,
+          budgetMax: max,
+
+        }
       };
     }
 
-    const post = await prisma.post.create({
-      data: {
-        user: {
-          connect: { id: body.userId },
-        },
 
-        title: body.title,
-        description: body.description,
-        postType: body.postType,
-        state: body.state,
-        metadata: body.metadata ?? undefined,
+    try {
 
-        location: body.location
-          ? { create: body.location }
-          : undefined,
+      const post = await prisma.post.create({
+        data: {
+          user: {
+            connect: { id: body.userId },
+          },
 
-        images: {
-          create: body.images.map(img => ({
-            url: img.url,
-            publicId: img.publicId,
-            order: img.order ?? null,
-          })),
-        },
+          title: body.title,
+          description: body.description,
+          postType: body.postType,
+          state: body.state,
+          metadata: body.metadata ?? undefined,
 
-        event: eventData,
-
-        service:
-          body.postType === "SERVICE"
-            ? { create: body.service! }
+          location: body.location
+            ? { create: body.location }
             : undefined,
-      },
-    });
 
-    return post;
+          images: {
+            create: body.images.map(img => ({
+              url: img.url,
+              publicId: img.publicId,
+              order: img.order ?? null,
+            })),
+          },
+
+          event: eventData,
+
+          service:
+            body.postType === "SERVICE"
+              ? { create: body.service! }
+              : undefined,
+        },
+      });
+
+      return post;
+    }
+    catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
-};
 
 
 
 
+  //TODO: get post
+  //TODO: get post by id
 
-
+}
