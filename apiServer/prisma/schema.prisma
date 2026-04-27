@@ -86,6 +86,8 @@ model Event {
   postId    String   @unique
   startTime DateTime
   endTime   DateTime
+  budgetMin Float? // optional range
+  budgetMax Float?
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }

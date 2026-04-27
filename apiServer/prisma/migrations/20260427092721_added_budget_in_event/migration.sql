@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "budgetMax" DOUBLE PRECISION,
+ADD COLUMN     "budgetMin" DOUBLE PRECISION;
