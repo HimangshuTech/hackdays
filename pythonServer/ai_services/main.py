@@ -1,21 +1,25 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from recommender.api.routes import recommend, places
+from recommender.api.routes import recommend, places, ingest   
+from recommender.model.similarity import build_place_corpus
 import json
-from recommender.model.ranker import rank_places
-from recommender.model.filters import filter_candidates
-from recommender.utils.preprocessing import build_rich_text
-def load_places():
-    with open("data/places.json") as f:
-        places = json.load(f)
-    for place in places:
-        place["combined_text"] = build_rich_text(place)  
-    return places
 
-def recommend(query,state=None, budget=None, month=None, types=None):
-    places = load_places()
-    candidates = filter_candidates(places, state=state,budget=budget, month=month, types=types)
-    ranked = rank_places(query, candidates)
-    return ranked[:5]
+app = FastAPI(
+    title="Eco Tourism Recommender API",
+    version="1.0.0"
+)
 
-results = recommend("river rafting",state='Assam')
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.include_router(recommend.router, tags=["Recommendations"])
+app.include_router(places.router,    tags=["Places"])
+app.include_router(ingest.router,    tags=["Ingestion"])
 
-for r in results:
-    print(r["name"], r["state"],r["final_score"])
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "recommender"}
