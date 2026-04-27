@@ -6,6 +6,8 @@ import { authMiddleware } from '../../middleware/auth.middleware';
 const route = Router()
 
 route.post("/create", authMiddleware, upload.array("Images", 5), PostController.uploadPost)
+route.get("/getPost", authMiddleware, PostController.getAllPost)
+route.get("/getPost/:id", authMiddleware, PostController.getPostById)
 
 
 export default route;
