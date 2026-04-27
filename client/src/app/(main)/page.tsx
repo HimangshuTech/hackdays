@@ -1,7 +1,7 @@
+
 export default function Home() {
   return (
-    <div className="">
-      hellow
+    <div className="px-10 pt-5">
     </div>
   );
 }
