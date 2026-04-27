@@ -150,7 +150,7 @@ const getme = async (req: Request, res: Response) => {
     id,
     name,
     email,
-    usetType: userType
+    userType: userType
   });
 };
 
