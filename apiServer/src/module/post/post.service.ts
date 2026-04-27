@@ -1,8 +1,11 @@
-import { CreatePostRequest } from "./types/post.type"
-import { prisma } from "../../db/client"
+import { CreatePostRequest } from "./types/post.type";
+import { prisma } from "../../db/client";
 
 export const PostService = {
 
+  // =========================
+  // CREATE POST
+  // =========================
   async createPost(body: CreatePostRequest & {
     userId: string;
     images?: { url: string; publicId: string; order?: number }[];
@@ -38,14 +41,11 @@ export const PostService = {
           endTime: end,
           budgetMin: min,
           budgetMax: max,
-
         }
       };
     }
 
-
     try {
-
       const post = await prisma.post.create({
         data: {
           user: {
@@ -80,18 +80,83 @@ export const PostService = {
       });
 
       return post;
+
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
-    catch (err) {
+  },
+
+
+  // =========================
+  // GET ALL POSTS
+  // =========================
+  async getAllPost() {
+    try {
+      const posts = await prisma.post.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          images: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+          location: true,
+          event: true,
+          service: true,
+        },
+      });
+
+      return posts;
+
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
+
+
+  // =========================
+  // GET POST BY ID
+  // =========================
+  async getPostById(id: string) {
+    try {
+      const post = await prisma.post.findUnique({
+        where: { id },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          images: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+          location: true,
+          event: true,
+          service: true,
+        },
+      });
+
+      return post;
+
+    } catch (err) {
       console.log(err);
       throw err;
     }
   }
 
-
-
-
-
-  //TODO: get post
-  //TODO: get post by id
-
-}
+};
