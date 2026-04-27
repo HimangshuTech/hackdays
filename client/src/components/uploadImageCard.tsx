@@ -45,9 +45,9 @@ export default function UploadImageCard({
     onAction(files);
   };
 
-  // 🔥 Drag Events
+  //  Drag Events
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault(); // REQUIRED
+    e.preventDefault();
     setIsDragging(true);
   };
 

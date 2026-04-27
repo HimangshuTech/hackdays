@@ -82,4 +82,21 @@ export const PostController = {
       });
     }
   },
+
+
+  async getAllPost(req: Request, res: Response) {
+    //TODO:
+    // return all the posts
+
+
+  },
+
+  async getPostById(req: Request, res: Response) {
+    // extract the id from the Request
+    //TODO: return all the posts uploaded the that specific ID/user
+    //
+  }
+
+
+
 };
