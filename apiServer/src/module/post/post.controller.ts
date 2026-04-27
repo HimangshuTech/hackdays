@@ -83,18 +83,49 @@ export const PostController = {
     }
   },
 
-
   async getAllPost(req: Request, res: Response) {
-    //TODO:
-    // return all the posts
+    try {
+      const posts = await PostService.getAllPost();
 
+      return res.status(200).json({
+        message: "Posts fetched successfully",
+        data: posts,
+      });
 
+    } catch (error) {
+      console.error("getAllPost error:", error);
+
+      return res.status(500).json({
+        error: "Failed to fetch posts",
+      });
+    }
   },
 
+
   async getPostById(req: Request, res: Response) {
-    // extract the id from the Request
-    //TODO: return all the posts uploaded the that specific ID/user
-    //
+    try {
+    //  const { id } = req.params;
+      const id = req.params.id as string;
+      const post = await PostService.getPostById(id);
+
+      if (!post) {
+        return res.status(404).json({
+          error: "Post not found",
+        });
+      }
+
+      return res.status(200).json({
+        message: "Post fetched successfully",
+        data: post,
+      });
+
+    } catch (error) {
+      console.error("getPostById error:", error);
+
+      return res.status(500).json({
+        error: "Failed to fetch post",
+      });
+    }
   }
 
 
