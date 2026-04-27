@@ -20,6 +20,18 @@ export default function DashBoard() {
 
   const [images, setImages] = useState<File[]>([]);
 
+
+
+  const [event, setEvent] = useState("")
+
+  const [place, setPlace] = useState("")
+
+  const [service, setService] = useState("")
+
+
+
+
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -103,11 +115,42 @@ export default function DashBoard() {
 
   return (
     <div className="min-h-screen p-6 flex justify-center">
+
+
+
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-2xl space-y-4"
       >
+
+
         <h2 className="text-xl font-semibold text-center">CONTRIBUTE</h2>
+
+        <p className="text-sm text-gray-500  text-center">
+          select type of the contributiion        </p>
+        <div className="flex flex-row gap-5 items-center justify-center">
+
+          <div
+            className="cursor-pointer hover:bg-green-200 p-2 rounded-lg"
+            onClick={() => setPlace("PLACE")}
+          >
+            PLACE
+          </div>
+          <div
+            className="cursor-pointer hover:bg-green-200 p-2 rounded-lg"
+            onClick={() => setEvent("EVENT")}
+          >
+            EVENT
+          </div>
+
+          <div
+            className="cursor-pointer hover:bg-green-200 p-2 rounded-lg"
+            onClick={() => setService("SERVICE")}
+          >
+            SERVICE
+          </div>
+
+        </div>
 
         {/* Title */}
         <input
@@ -167,7 +210,7 @@ export default function DashBoard() {
         />
 
         {/* Upload */}
-        <UploadImageCard onFilesSelect={(files) => setImages(files)} />
+        <UploadImageCard onAction={(files) => setImages(files)} />
 
         {/* Preview */}
         <div className="grid grid-cols-3 gap-2 mt-3">

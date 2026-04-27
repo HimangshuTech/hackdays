@@ -7,9 +7,9 @@ const MAX_FILES = 5;
 const MAX_SIZE_MB = 5;
 
 export default function UploadImageCard({
-  onFilesSelect,
+  onAction,
 }: {
-  onFilesSelect: (files: File[]) => void;
+  onAction: (files: File[]) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -42,7 +42,7 @@ export default function UploadImageCard({
     const files = Array.from(e.target.files);
     if (!validateFiles(files)) return;
 
-    onFilesSelect(files);
+    onAction(files);
   };
 
   // 🔥 Drag Events
@@ -63,7 +63,7 @@ export default function UploadImageCard({
 
     if (!validateFiles(files)) return;
 
-    onFilesSelect(files);
+    onAction(files);
   };
 
   return (
