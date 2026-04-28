@@ -47,7 +47,25 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchPosts();
+    let shouldIgnore = false;
+
+    const loadPosts = async () => {
+      try {
+        const res = await api.get<GetPostsResponse>("/api/post/getPost");
+
+        if (!shouldIgnore) {
+          setPosts(res.data.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadPosts();
+
+    return () => {
+      shouldIgnore = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -116,4 +134,3 @@ export default function Home() {
     </div>
   );
 }
-
