@@ -71,7 +71,7 @@ export default function ContributorCard() {
         {loading ? "Loging up..." : "LogIn"}
       </button>
       <div className="text-center">
-        do not have an acount? <a className="underline text-blue-500" href="/contributorSignup">sign up</a>
+        do not have an acount? <a className="underline text-blue-500" href="/contributor-signup">sign up</a>
 
       </div>
     </form>

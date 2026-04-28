@@ -34,7 +34,7 @@ export default function NavBar() {
 
       <div className="flex w-full justify-end">
 
-        <Link href={"/contributorLogin"}>
+        <Link href={"/contributor-login"}>
           <div className="bg-green-500 p-2 rounded-xl text-white">
 
 

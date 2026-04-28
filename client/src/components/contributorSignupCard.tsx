@@ -81,7 +81,7 @@ export default function ContributorSignupCard() {
         {loading ? "Signing up..." : "Sign Up"}
       </button>
       <div className="text-center">
-        Already have an acount? <a className="underline text-blue-500" href="/contributorLogin">Login</a>
+        Already have an acount? <a className="underline text-blue-500" href="/contributor-login">Login</a>
 
       </div>
     </form>
