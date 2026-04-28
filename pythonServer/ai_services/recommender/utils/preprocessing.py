@@ -1,56 +1,32 @@
+# recommender/utils/preprocessing.py
 import json
+import os
+from recommender.api.ingestion import normalise_bulk
 
-def build_rich_text(place):
-    parts = []
+INTERNAL_PLACES_PATH = os.path.join(
+    os.path.dirname(__file__), "../../data/places.json"
+)
+EMBEDDINGS_CACHE = os.path.join(
+    os.path.dirname(__file__), "../../data/place_embeddings.pkl"
+)
 
-    parts.append(place["name"])
+def bust_cache():
+    if os.path.exists(EMBEDDINGS_CACHE):
+        os.remove(EMBEDDINGS_CACHE)
 
+def load_from_formatted_json(source_path: str) -> int:
+    with open(source_path) as f:
+        raw = json.load(f)               # works for both list and dict now
 
-    type_phrases = {
-        "eco":        "eco-tourism sustainable travel green destination",
-        "wildlife":   "wildlife sanctuary animal spotting nature reserve",
-        "cultural":   "cultural heritage local traditions indigenous community",
-        "adventure":  "adventure activities outdoor exploration thrill",
-        "historical": "historical heritage ancient monuments history archaeology",
-        "religious":  "religious pilgrimage sacred site temple monastery",
-        "nature":     "nature scenic landscape forest hills valley",
-        "leisure":    "leisure relaxation sightseeing tourism",
-        "heritage":   "historical heritage ancient monuments",  
-    }
-    for t in place["types"]:
-        parts.append(type_phrases.get(t.lower(), t))
+    normalised = normalise_bulk(raw)
 
-    parts.append("activities include " + ", ".join(place["activities"]))
+    with open(INTERNAL_PLACES_PATH, "w") as f:
+        json.dump(normalised, f, indent=2, ensure_ascii=False)
 
-    parts.append(place["description"])
+    bust_cache()
+    print(f"Loaded {len(normalised)} places → {INTERNAL_PLACES_PATH}")
+    return len(normalised)
 
-
-    avg = (place["budget_min"] + place["budget_max"]) / 2
-    if avg < 1000:
-        parts.append("budget friendly low cost affordable")
-    elif avg > 3500:
-        parts.append("premium experience higher budget")
-
-    months = place.get("best_months", [])
-    if set(months) & {"Dec", "Jan", "Feb"}:
-        parts.append("winter travel cold weather")
-    if set(months) & {"Mar", "Apr", "May"}:
-        parts.append("spring season pleasant weather")
-    if set(months) & {"Jun", "Jul", "Aug"}:
-        parts.append("monsoon season lush green")
-    if set(months) & {"Sep", "Oct", "Nov"}:
-        parts.append("autumn season mild weather")
-
-    return " ".join(parts)
-
-
-with open("/Users/subhamdas/Desktop/Hackathon/hackdays/pythonServer/ai_services/data/places.json") as f:
-    places = json.load(f)
-
-for p in places:
-    p["combined_text"] = build_rich_text(p)
-
-with open("/Users/subhamdas/Desktop/Hackathon/hackdays/pythonServer/ai_services/data/places.json", "w") as f:
-    json.dump(places, f, indent=2, ensure_ascii=False)
-
-print("Done. Delete place_embeddings.pkl if it exists.")
+def load_internal_places() -> list[dict]:
+    with open(INTERNAL_PLACES_PATH) as f:
+        return json.load(f)

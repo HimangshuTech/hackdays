@@ -1,17 +1,18 @@
 # api/routes/places.py
 from fastapi import APIRouter, HTTPException
+from recommender.utils.preprocessing import load_internal_places
 import json, os
 
 router = APIRouter()
-DATA_PATH = "data/places.json"
+# DATA_PATH = "data/updated_formatted_places.json"
 
-def load_places():
-    with open(DATA_PATH) as f:
-        return json.load(f)
+# def load_places():
+#     with open(DATA_PATH) as f:
+#         return json.load(f)
 
 @router.get("/places")
 def get_all_places():
-    places = load_places()
+    places = load_internal_places()
     return {"total": len(places), "places": places}
 
 @router.get("/places/{place_id}")

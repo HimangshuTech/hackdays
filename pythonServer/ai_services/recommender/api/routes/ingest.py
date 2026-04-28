@@ -3,7 +3,7 @@ from recommender.api.ingestion import normalise
 import json, os
 
 router = APIRouter()
-DATA_PATH = "data/places.json"
+DATA_PATH = "data/output.json"
 
 def load_places():
     with open(DATA_PATH) as f:
