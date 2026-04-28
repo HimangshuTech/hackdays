@@ -57,9 +57,9 @@ export default function NavBar() {
             </div>
           </Link>
         ) : (
-          <Link href="/login">
+          <Link href="/contributor-login">
             <div className="bg-black text-white px-4 py-2 rounded-xl">
-              LOGIN
+              BECOME A CONTRIBUTOR
             </div>
           </Link>
         )}

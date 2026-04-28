@@ -25,7 +25,6 @@ export default function ProfileCard() {
         const res = await api.get("/api/auth/getme")
         setUser(res.data)
       } catch (err) {
-        router.push("/")
         console.log(err);
       } finally {
         setLoading(false)

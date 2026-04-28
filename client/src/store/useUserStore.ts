@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { persist } from "zustand/middleware";
+
 export type User = {
   name: string;
   email: string;
@@ -16,7 +17,7 @@ export type User = {
 type UserStore = {
   user: User | null;
   isLoading: boolean;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
   clearUser: () => void;
   setLoading: (state: boolean) => void;
 };
