@@ -87,6 +87,20 @@ export const PostService = {
     }
   },
 
+  async getAll() {
+
+    try {
+      const posts = await prisma.post.findMany({
+        orderBy: {
+          createdAt: "desc",
+        }
+      })
+      return posts;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
 
   // =========================
   // GET ALL POSTS
@@ -97,26 +111,32 @@ export const PostService = {
         orderBy: {
           createdAt: "desc",
         },
-        include: {
+        select: {
+          id: true,
+          title: true,
+          location: true,
+          event: true,
+          postType: true,
+          service: true,
+          createdAt: true,
+
           user: {
             select: {
-              id: true,
               name: true,
-              email: true,
             },
           },
+
           images: {
             orderBy: {
               order: "asc",
             },
+            select: {
+              url: true,
+              order: true,
+            },
           },
-          location: true,
-          event: true,
-          service: true,
         },
-      });
-
-      return posts;
+      }); return posts;
 
     } catch (err) {
       console.log(err);

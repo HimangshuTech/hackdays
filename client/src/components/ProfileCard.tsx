@@ -25,15 +25,14 @@ export default function ProfileCard() {
         console.log(res);
         console.log(user);
       } catch (err) {
-        // router.push("/") // not logged in → go login
+        router.push("/")
         console.log(err);
       } finally {
         setLoading(false)
       }
     }
-
     fetchUser()
-  }, [])
+  }, [user, router])
 
   // Logout
   const handleLogout = async () => {
@@ -55,12 +54,11 @@ export default function ProfileCard() {
     <div className="w-full max-w-4xl bg-white p-6 rounded-2xl shadow-md border border-gray-200 flex flex-col gap-6">
 
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold">My Profile</h1>
+      <div className="flex justify-end items-center">
 
         <button
           onClick={handleLogout}
-          className="px-4 py-1 bg-red-500 text-white rounded-md"
+          className="px-4 py-1 bg-gray-500 text-white rounded-md"
         >
           Logout
         </button>
@@ -68,7 +66,7 @@ export default function ProfileCard() {
 
       {/* User Info */}
       <div className="flex items-center gap-4">
-        <div className="w-14 h-14 flex items-center justify-center rounded-full bg-blue-600 text-white text-xl font-bold">
+        <div className="w-14 h-14 flex items-center justify-center rounded-full bg-amber-800 text-white text-xl font-bold">
           {user?.name.charAt(0).toUpperCase()}
         </div>
 
