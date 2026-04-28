@@ -21,6 +21,18 @@ type Post = {
   postType: string;
   state: string;
   createdAt: string;
+  event: {
+    startTime: string;
+    endTime: string;
+    budgetMin?: number;
+    budgetMax?: number;
+  };
+  service: {
+    price?: number;
+    budgetMin?: number;
+    budgetMax?: number;
+    contactInfo: string;
+  };
   metadata?: {
     types?: string[];
     activities?: string[];
