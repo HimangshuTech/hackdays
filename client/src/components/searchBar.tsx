@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { Search } from "lucide-react";
 
-export default function SearchBar() {
-  const [query, setQuery] = useState("");
+type SearchBarProps = {
+  query: string;
+  onQueryChange: (value: string) => void;
+  onSearch: () => void;
+  isSearching?: boolean;
+};
 
-  const handleSearch = () => {
-    console.log("Search:", query);
-  };
+export default function SearchBar({
+  query,
+  onQueryChange,
+  onSearch,
+  isSearching = false,
+}: SearchBarProps) {
 
   return (
     <div className="w-full flex justify-center mt-20 px-4">
@@ -24,8 +30,8 @@ export default function SearchBar() {
             type="text"
             placeholder="Search places, events, services..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            onChange={(e) => onQueryChange(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && onSearch()}
             className="w-full outline-none text-sm"
           />
         </div>
@@ -33,10 +39,11 @@ export default function SearchBar() {
         <div className="h-6 w-px bg-gray-300" />
 
         <button
-          onClick={handleSearch}
+          onClick={onSearch}
+          disabled={isSearching}
           className="px-5 text-sm font-medium cursor-pointer hover:bg-green-400 h-full"
         >
-          Search
+          {isSearching ? "Searching..." : "Search"}
         </button>
       </div>
     </div>

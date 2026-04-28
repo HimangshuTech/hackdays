@@ -8,6 +8,11 @@ import axios from "axios"
 type User = {
   name: string
   email: string
+  counts: {
+    events: number
+    places: number
+    services: number
+  }
 }
 
 export default function ProfileCard() {
@@ -74,12 +79,6 @@ export default function ProfileCard() {
         </div>
       </div>
 
-      <div>
-        <div className="rounded-2xl bg-amber-800">
-
-          upload +
-        </div>
-      </div>
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
@@ -89,7 +88,7 @@ export default function ProfileCard() {
           className="cursor-pointer bg-gray-50 p-5 rounded-xl border hover:shadow-md"
         >
           <p className="text-gray-600">Total Events</p>
-          <h2 className="text-2xl font-bold text-blue-600">12</h2>
+          <h2 className="text-2xl font-bold text-blue-600">{user?.counts.events ?? 0}</h2>
         </div>
 
         {/* Places */}
@@ -98,7 +97,7 @@ export default function ProfileCard() {
           className="cursor-pointer bg-gray-50 p-5 rounded-xl border hover:shadow-md"
         >
           <p className="text-gray-600">Total Places</p>
-          <h2 className="text-2xl font-bold text-green-600">8</h2>
+          <h2 className="text-2xl font-bold text-green-600">{user?.counts.places ?? 0}</h2>
         </div>
 
         {/* Services */}
@@ -107,7 +106,7 @@ export default function ProfileCard() {
           className="cursor-pointer bg-gray-50 p-5 rounded-xl border hover:shadow-md"
         >
           <p className="text-gray-600">Total Services</p>
-          <h2 className="text-2xl font-bold text-orange-600">5</h2>
+          <h2 className="text-2xl font-bold text-orange-600">{user?.counts.services ?? 0}</h2>
         </div>
 
       </div>

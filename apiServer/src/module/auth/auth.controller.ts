@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Authservice } from "./auth.service";
 import { z } from "zod";
+import { prisma } from "../../db/client";
 
 // Signup Schema
 const signupSchema = z.object({
@@ -144,13 +145,40 @@ const getme = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const { id, name, email, userType } = user;
+  const { id, name, email, usertype } = user;
+
+  const groupedPosts = await prisma.post.groupBy({
+    by: ["postType"],
+    where: { userId: id },
+    _count: { _all: true },
+  });
+
+  const counts = {
+    events: 0,
+    places: 0,
+    services: 0,
+  };
+
+  for (const item of groupedPosts) {
+    if (item.postType === "EVENT") counts.events = item._count._all;
+    if (item.postType === "PLACE") counts.places = item._count._all;
+    if (item.postType === "SERVICE") counts.services = item._count._all;
+  }
 
   return res.status(200).json({
     id,
     name,
     email,
-    userType: userType
+    userType: usertype,
+    counts,
+  });
+};
+
+const logout = async (_req: Request, res: Response) => {
+  res.clearCookie("token", { path: "/" });
+
+  return res.status(200).json({
+    message: "Logged out successfully",
   });
 };
 
@@ -159,6 +187,7 @@ export default {
   login,
   contributor,
   contributorSignup,
-  getme
+  getme,
+  logout
 };
 
