@@ -3,9 +3,7 @@ import { prisma } from "../../db/client";
 
 export const PostService = {
 
-  // =========================
   // CREATE POST
-  // =========================
   async createPost(body: CreatePostRequest & {
     userId: string;
     images?: { url: string; publicId: string; order?: number }[];
@@ -102,14 +100,12 @@ export const PostService = {
     }
   },
 
-  // =========================
   // GET ALL POSTS
-  // =========================
   async getAllPost() {
     try {
       const posts = await prisma.post.findMany({
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
         select: {
           id: true,
@@ -145,9 +141,7 @@ export const PostService = {
   },
 
 
-  // =========================
   // GET POST BY ID
-  // =========================
   async getPostById(id: string) {
     try {
       const post = await prisma.post.findUnique({
