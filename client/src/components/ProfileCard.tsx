@@ -91,28 +91,19 @@ export default function ProfileCard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
         {/* Events */}
-        <div
-          onClick={() => router.push("/my-events")}
-          className="cursor-pointer bg-gray-50 p-5 rounded-xl border hover:shadow-md"
-        >
+        <div className="bg-gray-50 p-5 rounded-xl border">
           <p className="text-gray-600">Total Events</p>
           <h2 className="text-2xl font-bold text-blue-600">{user?.counts?.events ?? 0}</h2>
         </div>
 
         {/* Places */}
-        <div
-          onClick={() => router.push("/my-places")}
-          className="cursor-pointer bg-gray-50 p-5 rounded-xl border hover:shadow-md"
-        >
+        <div className="bg-gray-50 p-5 rounded-xl border">
           <p className="text-gray-600">Total Places</p>
           <h2 className="text-2xl font-bold text-green-600">{user?.counts?.places ?? 0}</h2>
         </div>
 
         {/* Services */}
-        <div
-          onClick={() => router.push("/my-services")}
-          className="cursor-pointer bg-gray-50 p-5 rounded-xl border hover:shadow-md"
-        >
+        <div className="bg-gray-50 p-5 rounded-xl border">
           <p className="text-gray-600">Total Services</p>
           <h2 className="text-2xl font-bold text-orange-600">{user?.counts?.services ?? 0}</h2>
         </div>

@@ -2,12 +2,25 @@
 "use client"
 import Link from "next/link"
 import Image from "next/image"
+
+import { useSearchParams } from "next/navigation"
+
+export default function NavBar() {
+  const searchParams = useSearchParams()
+  const selectedType = searchParams.get("type")?.toUpperCase()
+
+  const itemClass = (type: "PLACE" | "EVENT" | "SERVICE") =>
+    `p-2 rounded-xl cursor-pointer transition-transform duration-300 ease-in-out hover:scale-[1.08] ${
+      selectedType === type ? "underline text-gray-900" : "hover:underline hover:text-gray-800"
+    }`
+
 import { useUserStore } from "@/store/useUserStore"
 
 export default function NavBar() {
   const user = useUserStore((state) => state.user)
   const initial = user?.name?.trim().charAt(0).toUpperCase() || "U"
   const isContributor = user?.userType?.toUpperCase() === "CONTRIBUTOR"
+
 
   return (
     <div className="px-10 mt-5  h-10 w-full rounded-2xl  flex  items-center justify-center  ">
@@ -24,16 +37,15 @@ export default function NavBar() {
 
       <div className="flex flex-row  gap-10 justify-center font-medium ">
 
-        <div className=" p-2 rounded-xl hover:underline cursor-pointer hover:text-gray-800 transition-transform duration-300 ease-in-out hover:scale-[1.2]
-          ">
+        <Link href="/?type=PLACE" className={itemClass("PLACE")}>
           PLACES
-        </div>
-        <div className=" p-2 rounded-xl hover:underline cursor-pointer hover:text-gray-800 transition-transform duration-300 ease-in-out hover:scale-[1.2] ">
+        </Link>
+        <Link href="/?type=EVENT" className={itemClass("EVENT")}>
           EVENTS
-        </div>
-        <div className=" p-2 rounded-xl hover:underline cursor-pointer hover:text-gray-800  transition-transform duration-300 ease-in-out hover:scale-[1.2]">
+        </Link>
+        <Link href="/?type=SERVICE" className={itemClass("SERVICE")}>
           SERVICES
-        </div>
+        </Link>
 
       </div>
 
