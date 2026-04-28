@@ -22,8 +22,6 @@ export default function ProfileCard() {
       try {
         const res = await api.get("/api/auth/getme")
         setUser(res.data)
-        console.log(res);
-        console.log(user);
       } catch (err) {
         router.push("/")
         console.log(err);
@@ -32,7 +30,7 @@ export default function ProfileCard() {
       }
     }
     fetchUser()
-  }, [user, router])
+  }, [router])
 
   // Logout
   const handleLogout = async () => {
@@ -76,6 +74,12 @@ export default function ProfileCard() {
         </div>
       </div>
 
+      <div>
+        <div className="rounded-2xl bg-amber-800">
+
+          upload +
+        </div>
+      </div>
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
