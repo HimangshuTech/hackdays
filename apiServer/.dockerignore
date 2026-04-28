@@ -1,0 +1,17 @@
+.env
+.env.*
+.DS_Store
+
+node_modules
+dist
+coverage
+prisma/generated
+public/temp/*
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+Dockerfile
+.dockerignore
