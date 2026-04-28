@@ -1,10 +1,15 @@
 import { create } from "zustand";
 
 import { persist } from "zustand/middleware";
-type User = {
+export type User = {
   name: string;
   email: string;
   userType: "USER" | "CONTRIBUTOR";
+  counts?: {
+    events: number;
+    places: number;
+    services: number;
+  };
 
 };
 
