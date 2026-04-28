@@ -6,27 +6,41 @@ import api from "@/config/axios";
 import { GetPostsResponse, Post } from "@/types/getAllPost.type";
 import SearchBar from "@/components/searchBar";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 type SearchPostsResponse = {
   success: boolean;
   data: Post[];
 };
 
+type PostTypeFilter = "PLACE" | "EVENT" | "SERVICE" | null;
+
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const searchParams = useSearchParams();
 
-  const fetchPosts = async (searchQuery = "") => {
+  const selectedTypeParam = searchParams.get("type")?.toUpperCase();
+  const selectedType: PostTypeFilter =
+    selectedTypeParam === "PLACE" ||
+    selectedTypeParam === "EVENT" ||
+    selectedTypeParam === "SERVICE"
+      ? selectedTypeParam
+      : null;
+
+  const fetchPosts = async (searchQuery = "", postType: PostTypeFilter = null) => {
     const normalizedQuery = searchQuery.trim();
+    const hasSearchCriteria = normalizedQuery.length > 0 || !!postType;
 
     try {
-      if (normalizedQuery.length > 0) {
+      if (hasSearchCriteria) {
         setIsSearching(true);
 
         const res = await api.get<SearchPostsResponse>("/api/search", {
           params: {
-            query: normalizedQuery,
+            ...(normalizedQuery ? { query: normalizedQuery } : {}),
+            ...(postType ? { postType } : {}),
             page: 1,
             limit: 100,
           },
@@ -46,22 +60,19 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  useEffect(() => {
     const normalized = query.trim();
 
     if (!normalized) {
+      fetchPosts("", selectedType);
       return;
     }
 
     const timeout = setTimeout(() => {
-      fetchPosts(normalized);
+      fetchPosts(normalized, selectedType);
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [query]);
+  }, [query, selectedType]);
 
   return (
     <div>
@@ -76,10 +87,10 @@ export default function Home() {
                 setQuery(value);
 
                 if (!value.trim()) {
-                  fetchPosts("");
+                  fetchPosts("", selectedType);
                 }
               }}
-              onSearch={() => fetchPosts(query)}
+              onSearch={() => fetchPosts(query, selectedType)}
               isSearching={isSearching}
             />
           </div>
