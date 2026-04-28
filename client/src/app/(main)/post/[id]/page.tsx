@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import api from "@/config/axios";
+import { useParams } from "next/navigation";
 
-type ImageType = {
-  id: string;
-  url: string;
-  order: number;
-};
+
+
+type ImageType =
+  {
+    id: string;
+    url: string;
+    order: number;
+  };
 
 type Post = {
   id: string;
@@ -30,10 +34,10 @@ type Post = {
   };
 };
 
-export default function PostPage({ params }: { params: { id: string } }) {
+export default function PostPage() {
   const [post, setPost] = useState<Post | null>(null);
   const [current, setCurrent] = useState(0);
-
+  const params = useParams();
   useEffect(() => {
     const getPost = async () => {
       try {
@@ -62,19 +66,19 @@ export default function PostPage({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 space-y-6">
-      <h1 className="text-3xl font-bold">{post.title}</h1>
+    <div className="max-w-5xl mx-auto p-4 space-y-6 mt-10">
 
       {/* Carousel */}
-      <div className="relative w-full h-[400px] rounded-2xl overflow-hidden">
+      <div className="relative w-full  aspect-3/2 rounded-2xl overflow-hidden">
         {post.images.length > 0 && (
           <Image
             src={post.images[current].url}
             alt="post image"
             fill
-            className="object-cover"
+            className="object-cover aspect-4/5"
           />
         )}
+
 
         {post.images.length > 1 && (
           <>
@@ -88,24 +92,13 @@ export default function PostPage({ params }: { params: { id: string } }) {
         )}
       </div>
 
-      {/* Dots */}
-      <div className="flex justify-center gap-2">
-        {post.images.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => setCurrent(index)}
-            className={`h-2 w-2 rounded-full cursor-pointer ${current === index ? "bg-black" : "bg-gray-400"
-              }`}
-          />
-        ))}
-      </div>
-
+      <h1 className="text-3xl font-bold">{post.title}</h1>
       <div className="text-sm text-gray-600 flex gap-4 flex-wrap">
         <span>{post.location?.name}</span>
         <span>{post.state}</span>
-        <span>{post.user.name}</span>
       </div>
 
+      <span className="font-bold"> {post.user.name}</span>
       <p className="text-gray-800 leading-relaxed">
         {post.description}
       </p>

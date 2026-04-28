@@ -104,7 +104,7 @@ export const PostController = {
 
   async getPostById(req: Request, res: Response) {
     try {
-    //  const { id } = req.params;
+      //  const { id } = req.params;
       const id = req.params.id as string;
       const post = await PostService.getPostById(id);
 
@@ -126,8 +126,25 @@ export const PostController = {
         error: "Failed to fetch post",
       });
     }
-  }
+  },
 
+  async getAll(req: Request, res: Response) {
+    try {
+      const posts = await PostService.getAll();
+
+      return res.status(200).json({
+        message: "Posts fetched successfully",
+        data: posts,
+      });
+
+    } catch (error) {
+      console.error("getAll error:", error);
+
+      return res.status(500).json({
+        error: "Failed to fetch posts",
+      });
+    }
+  }
 
 
 };

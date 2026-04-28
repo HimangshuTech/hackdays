@@ -1,6 +1,7 @@
 
 "use client"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function NavBar() {
   return (
@@ -8,8 +9,8 @@ export default function NavBar() {
 
       <div className="flex w-full justify-start ">
         <Link href={"/"}>
-          <div className="bg-green-200 p-1 rounded-xl">
-            OUR LOGO
+          <div className="">
+            <Image src="/logo.jpg" alt="logo" width={300} height={300} className="w-15"></Image>
           </div>
         </Link>
 

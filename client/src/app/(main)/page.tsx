@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import api from "@/config/axios";
 import { GetPostsResponse, Post } from "@/types/getAllPost.type";
 import SearchBar from "@/components/searchBar";
+import Link from "next/link";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -35,13 +36,14 @@ export default function Home() {
           {/* Grid */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-10">
             {posts.map((post) => (
-              <PostCard
-                key={post.id}
-                title={post.title}
-                name={post.user?.name ?? "Unknown"}
-                postType={post.postType}
-                image={post.images?.[0]?.url ?? "/img/1.jpg"}
-              />
+              <Link key={post.id} href={`/post/${post.id}`}>
+                <PostCard
+                  title={post.title}
+                  name={post.user?.name ?? "Unknown"}
+                  postType={post.postType}
+                  image={post.images?.[0]?.url ?? "/img/1.jpg"}
+                />
+              </Link>
             ))}
           </div>
 
