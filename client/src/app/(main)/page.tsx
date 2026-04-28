@@ -6,7 +6,11 @@ import api from "@/config/axios";
 import { GetPostsResponse, Post } from "@/types/getAllPost.type";
 import SearchBar from "@/components/searchBar";
 import Link from "next/link";
+
 import { useSearchParams } from "next/navigation";
+
+import Personalize from "@/components/personalizeButton";
+
 
 type SearchPostsResponse = {
   success: boolean;
@@ -60,6 +64,28 @@ export default function Home() {
   };
 
   useEffect(() => {
+    let shouldIgnore = false;
+
+    const loadPosts = async () => {
+      try {
+        const res = await api.get<GetPostsResponse>("/api/post/getPost");
+
+        if (!shouldIgnore) {
+          setPosts(res.data.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadPosts();
+
+    return () => {
+      shouldIgnore = true;
+    };
+  }, []);
+
+  useEffect(() => {
     const normalized = query.trim();
 
     if (!normalized) {
@@ -80,7 +106,7 @@ export default function Home() {
         <div className="w-full max-w-6xl px-4 md:px-8">
 
           {/* Search */}
-          <div className="mt-10 flex justify-center">
+          <div className="mt-5 flex justify-center">
             <SearchBar
               query={query}
               onQueryChange={(value) => {
@@ -93,6 +119,10 @@ export default function Home() {
               onSearch={() => fetchPosts(query, selectedType)}
               isSearching={isSearching}
             />
+          </div>
+          <div className="flex items-center justify-center mt-5">
+
+            <Personalize></Personalize>
           </div>
 
           {/* Grid */}
@@ -122,4 +152,3 @@ export default function Home() {
     </div>
   );
 }
-

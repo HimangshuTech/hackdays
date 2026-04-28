@@ -2,17 +2,23 @@
 
 import { useState } from "react";
 
+type Props = {
+  selected: string[];
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
 const TAGS = [
-  "eco", "tourism", "sustainable", "travel", "green", "destination",
-  "wildlife", "sanctuary", "animal", "spotting", "nature", "reserve",
-  "cultural", "heritage", "local", "traditions", "indigenous", "community",
-  "adventure", "activities", "outdoor", "exploration", "historical",
-  "ancient", "monuments", "history"
+  "activities", "adventure", "ancient", "animal", "community",
+  "cultural", "destination", "eco", "exploration", "green",
+  "heritage", "historical", "history", "indigenous", "local",
+  "monuments", "nature", "outdoor", "reserve", "sanctuary",
+  "spotting", "sustainable", "tourism", "traditions", "travel",
+  "wildlife"
 ];
 
-export default function TagInputCard() {
+
+export default function TagInputCard({ selected, setSelected }: Props) {
   const [input, setInput] = useState("");
-  const [selected, setSelected] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
   const filtered = TAGS.filter(
@@ -32,22 +38,27 @@ export default function TagInputCard() {
   };
 
   return (
-    <div className="w-full max-w-lg">
-      <h2 className="mb-2 font-semibold text-gray-700">Profile</h2>
+    <div className="w-full  relative">
 
       {/* Input container */}
       <div
-        className="flex flex-wrap items-center gap-2 border-2 border-blue-400 rounded-lg p-2 focus-within:ring-2 focus-within:ring-blue-300"
+        className="flex flex-wrap  items-center gap-2 border-2 border-blue-400 rounded-lg p-2 focus-within:ring-2 focus-within:ring-blue-300"
         onClick={() => setOpen(true)}
       >
-        {/* Selected Chips */}
+        {/* Chips */}
         {selected.map((tag) => (
           <div
             key={tag}
             className="flex items-center gap-2 bg-blue-500 text-white px-3 py-1 rounded-md"
           >
             {tag}
-            <button onClick={() => removeTag(tag)}>×</button>
+            <button
+              type="button"
+              onClick={() => removeTag(tag)}
+              className="text-white hover:text-gray-200"
+            >
+              ×
+            </button>
           </div>
         ))}
 
@@ -58,6 +69,7 @@ export default function TagInputCard() {
             setInput(e.target.value);
             setOpen(true);
           }}
+          onFocus={() => setOpen(true)}
           className="flex-1 outline-none min-w-30"
           placeholder="Search tags..."
         />
@@ -65,7 +77,7 @@ export default function TagInputCard() {
 
       {/* Dropdown */}
       {open && filtered.length > 0 && (
-        <div className="border rounded-md mt-1 max-h-60 overflow-y-auto shadow bg-white">
+        <div className="absolute z-10 w-full border rounded-md mt-1 max-h-60 overflow-y-auto shadow bg-white">
           {filtered.map((tag) => (
             <div
               key={tag}
