@@ -12,8 +12,11 @@ export const searchController = {
         limit = "10"
       } = req.query;
 
+      const normalizedQuery =
+        typeof query === "string" ? query.trim() : undefined;
+
       const result = await searchService.searchAll({
-        query: query as string,
+        query: normalizedQuery,
         postType: postType as string,
         state: state as string,
         page: parseInt(page as string),

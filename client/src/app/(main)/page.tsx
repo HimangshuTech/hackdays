@@ -7,21 +7,61 @@ import { GetPostsResponse, Post } from "@/types/getAllPost.type";
 import SearchBar from "@/components/searchBar";
 import Link from "next/link";
 
+type SearchPostsResponse = {
+  success: boolean;
+  data: Post[];
+};
+
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [query, setQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  const fetchPosts = async (searchQuery = "") => {
+    const normalizedQuery = searchQuery.trim();
+
+    try {
+      if (normalizedQuery.length > 0) {
+        setIsSearching(true);
+
+        const res = await api.get<SearchPostsResponse>("/api/search", {
+          params: {
+            query: normalizedQuery,
+            page: 1,
+            limit: 100,
+          },
+        });
+
+        setPosts(res.data.data);
+        return;
+      }
+
+      const res = await api.get<GetPostsResponse>("/api/post/getPost");
+      setPosts(res.data.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await api.get<GetPostsResponse>("/api/post/getPost");
-        setPosts(res.data.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    const normalized = query.trim();
+
+    if (!normalized) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      fetchPosts(normalized);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [query]);
 
   return (
     <div>
@@ -30,7 +70,18 @@ export default function Home() {
 
           {/* Search */}
           <div className="mt-10 flex justify-center">
-            <SearchBar />
+            <SearchBar
+              query={query}
+              onQueryChange={(value) => {
+                setQuery(value);
+
+                if (!value.trim()) {
+                  fetchPosts("");
+                }
+              }}
+              onSearch={() => fetchPosts(query)}
+              isSearching={isSearching}
+            />
           </div>
 
           {/* Grid */}
@@ -50,6 +101,9 @@ export default function Home() {
               </Link>
             ))}
           </div>
+          {!isSearching && posts.length === 0 && (
+            <div className="mt-10 text-center text-gray-600">No matching posts found.</div>
+          )}
 
         </div>
       </div>
