@@ -1,6 +1,5 @@
 import "dotenv/config";
 import express from 'express';
-import bodyParser from 'body-parser';
 import router from './routes/index';
 import cookieParser from 'cookie-parser';
 
@@ -16,20 +15,12 @@ app.use(
   })
 );
 app.use(express.json());
-
-app.use(bodyParser.json());
-
-app.use(express.json());
-
 app.use(cookieParser());
-
 
 app.use('/api/', router);
 
 app.get('/health', (req, res) => {
   res.json({ ok: true });
 });
-
-
 
 export default app;
