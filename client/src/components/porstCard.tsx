@@ -15,6 +15,7 @@ export default function PostCard({
   name,
   postType,
 }: PostCardType) {
+  console.log("what is image ", image)
   return (
     <div className="w-full rounded-2xl overflow-hidden bg-emerald-600 text-white relative cursor-pointer transition-transform duration-300 ease-in-out hover:scale-[1.04]">
 
@@ -27,7 +28,7 @@ export default function PostCard({
         width={500}
         height={500}
         alt={title}
-        src={image} // fallback
+        src={image}
         className="w-full aspect-4/5 object-cover"
       />
 

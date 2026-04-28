@@ -53,13 +53,10 @@ async function main() {
 
           images: item.images?.length
             ? {
-              create: item.images.map((img: any) => ({
-                url:
-                  img.url && img.url.length > 10
-                    ? img.url
-                    : "/img/default.jpg",
-                publicId: "seed",
-                order: img.order ?? 0,
+              create: item.images.map(() => ({
+                url: "#",
+                publicId: "seedid",
+                order: 0,
               })),
             }
             : undefined,

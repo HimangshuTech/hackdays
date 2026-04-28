@@ -41,7 +41,11 @@ export default function Home() {
                   title={post.title}
                   name={post.user?.name ?? "Unknown"}
                   postType={post.postType}
-                  image={post.images?.[0]?.url ?? "/img/1.jpg"}
+                  image={
+                    post.images?.[0]?.url && post.images[0].url !== "#"
+                      ? post.images[0].url
+                      : "/img/1.jpg"
+                  }
                 />
               </Link>
             ))}
