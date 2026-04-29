@@ -1,13 +1,16 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-from recommender.api.routes import recommend, places, ingest
+from recommender.api.routes import recommend, places, ingest, chat
 from recommender.utils.preprocessing import load_from_formatted_json, load_internal_places
 from recommender.model.similarity import build_place_corpus
 
 
-load_dotenv()
+
 app = FastAPI(
     title="Eco Tourism Recommender API",
     version="1.0.0"
@@ -20,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+app.include_router(chat.router, tags=["Chatbot"])
 app.include_router(recommend.router, tags=["Recommendations"])
 app.include_router(places.router,    tags=["Places"])
 app.include_router(ingest.router,    tags=["Ingestion"])

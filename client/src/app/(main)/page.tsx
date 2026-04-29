@@ -9,10 +9,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Personalize from "@/components/personalizeButton";
 
-type SearchPostsResponse = {
-  success: boolean;
-  data: Post[];
-};
+type SearchPostsResponse =
+  {
+    success: boolean;
+    data: Post[];
+  };
 
 type PostTypeFilter = "PLACE" | "EVENT" | "SERVICE" | null;
 
@@ -71,6 +72,7 @@ export default function Home() {
 
   return (
     <div>
+
       <div className="flex justify-center">
         <div className="w-full max-w-6xl px-4 md:px-8">
 
