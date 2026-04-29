@@ -5,6 +5,7 @@ import Image from "next/image";
 import api from "@/config/axios";
 import { useParams } from "next/navigation";
 
+import CommentsCard from "@/components/commentsCard";
 
 
 type ImageType =
@@ -141,6 +142,11 @@ export default function PostPage() {
             </div>
           </div>
         )}
+      </div>
+      <div>
+
+        <CommentsCard></CommentsCard>
+
       </div>
     </div>
   );

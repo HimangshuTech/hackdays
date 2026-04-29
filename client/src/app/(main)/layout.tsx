@@ -4,6 +4,7 @@
 
 import NavBar from "@/components/navBar";
 import { useAuth } from "@/hooks/useAuth";
+import Chatbot from "@/components/chatBot";
 
 export default function MainLayout({
   children,
@@ -16,6 +17,8 @@ export default function MainLayout({
   return (
     <div>
       <NavBar />
+      <Chatbot></Chatbot>
+
       {children}
     </div>
   );
