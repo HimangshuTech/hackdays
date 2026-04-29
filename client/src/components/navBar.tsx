@@ -23,9 +23,9 @@ export default function NavBar() {
   return (
     <div className="px-10 mt-5 h-10 w-full rounded-2xl flex items-center justify-center">
 
-      <div className="flex w-full justify-start">
+      <div className="flex  w-full justify-start ">
         <Link href="/">
-          <Image src="/logo.jpg" alt="logo" width={300} height={300} className="w-15" />
+          <Image src="/logo.jpg" alt="logo" width={300} height={300} className="w-25 bg-blend-multiply" />
         </Link>
       </div>
 
