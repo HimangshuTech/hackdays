@@ -10,7 +10,9 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   useAuth()
+
   return (
     <div>
       <NavBar />

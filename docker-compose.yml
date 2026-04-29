@@ -1,0 +1,72 @@
+services:
+  frontend:
+    build:
+      context: ./client
+      target: dev
+    init: true
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+      - ./client/next.config.ts:/app/next.config.ts
+      - ./client/postcss.config.mjs:/app/postcss.config.mjs
+      - ./client/tsconfig.json:/app/tsconfig.json
+      - frontend_next:/app/.next
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_API_URL: http://localhost:5000 
+      WATCHPACK_POLLING: "true"
+    depends_on:
+      - backend
+    command: npm run dev -- --hostname 0.0.0.0
+
+  backend:
+    build:
+      context: ./apiServer
+      target: dev
+    init: true
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./apiServer/.env
+    volumes:
+      - ./apiServer/src:/app/src
+      - ./apiServer/prisma/schema.prisma:/app/prisma/schema.prisma
+      - ./apiServer/prisma/migrations:/app/prisma/migrations
+      - ./apiServer/prisma.config.ts:/app/prisma.config.ts
+      - ./apiServer/tsconfig.json:/app/tsconfig.json
+      - ./apiServer/data.json:/app/data.json
+    environment:
+      NODE_ENV: development
+      PORT: "5000"
+      CLIENT_URL: http://localhost:3000
+      PYTHON_API_URL: http://ai-service:8000
+    depends_on:
+      - ai-service
+    command: sh -c "npx prisma generate && npm run dev"
+
+  ai-service:
+    build:
+      context: ./pythonServer
+      target: dev
+    init: true
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./pythonServer/ai_services:/app
+      - hf_cache:/root/.cache/huggingface
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      HF_HOME: /root/.cache/huggingface
+      WATCHFILES_FORCE_POLLING: "true"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  frontend_next:
+  hf_cache:

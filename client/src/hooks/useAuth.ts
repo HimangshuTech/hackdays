@@ -3,18 +3,26 @@ import api from "@/config/axios";
 import { useUserStore } from "@/store/useUserStore";
 
 export const useAuth = () => {
-  const { user, setUser } = useUserStore();
+  const { user, setUser, isLoading, setLoading } = useUserStore();
 
   useEffect(() => {
-    if (user) return;
+    if (user || isLoading) return;
 
     const fetchMe = async () => {
       try {
-        const res = await api.get("api/auth/getme");
+        setLoading(true);
+
+        const res = await api.get("/api/auth/getme", {
+        });
+
         setUser(res.data);
-      } catch { }
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMe();
-  }, [user, setUser]);
+  }, [user, setUser, setLoading]);
 };

@@ -2,18 +2,24 @@
 
 import { useState } from "react";
 import TagInputCard from "./tagInputCard";
-import { useRecommendationStore } from "@/store/useRecomendationStore";
+import { useRecommendationStore } from "@/store/useRecommendationStore";
+import api from "@/config/axios";
+import { useRouter } from "next/navigation";
+
 
 export default function RecInputCard() {
   const [tags, setTags] = useState<string[]>([]);
   const [stateName, setStateName] = useState("");
+
   const [budget, setBudget] = useState<number | "">("");
 
+  const router = useRouter()
   const setRecommendation = useRecommendationStore(
     (state) => state.setRecommendation
   );
+  const setResult = useRecommendationStore(state => state.setResult)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const payload = {
       tags,
       state: stateName,
@@ -24,7 +30,15 @@ export default function RecInputCard() {
 
     console.log("Stored in Zustand:", payload);
 
-    // router.push("/recommendations");
+    try {
+      const res = await api.post("api/recommend", payload)
+      setResult(res.data.data)
+      console.log(res)
+    } catch (err) {
+      console.log(err)
+    }
+
+    router.push("/recommendation");
   };
 
   return (

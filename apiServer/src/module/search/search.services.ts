@@ -86,7 +86,7 @@ export const searchService = {
       const candidates = await prisma.post.findMany({
         where,
         orderBy: {
-          createdAt: "desc"
+          createdAt: "asc"
         },
         include: {
           user: {
@@ -126,7 +126,7 @@ export const searchService = {
         skip,
         take: safeLimit,
         orderBy: {
-          createdAt: "desc"
+          createdAt: "asc"
         },
         include: {
           user: {
