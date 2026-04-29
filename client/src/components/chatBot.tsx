@@ -64,7 +64,7 @@ export default function Chatbot() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-full shadow-lg z-50"
+        className="fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-full shadow-lg z-50 cursor-pointer"
       >
         Talk to Bohagi
       </button>
@@ -79,7 +79,7 @@ export default function Chatbot() {
               <div className="h-8 w-8 bg-white text-black rounded-full flex items-center justify-center font-bold">
                 B
               </div>
-              <span className="font-semibold">Bohagi AI</span>
+              <div className="font-semibold">Bohagi</div>
             </div>
 
             <button onClick={() => setIsOpen(false)}>✕</button>
@@ -118,7 +118,7 @@ export default function Chatbot() {
             />
             <button
               onClick={sendMessage}
-              className="bg-black text-white px-3 rounded-lg"
+              className="bg-black text-white px-3 rounded-lg cursor-pointer"
               disabled={loading}
             >
               Ask

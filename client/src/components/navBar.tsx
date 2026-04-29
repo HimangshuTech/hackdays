@@ -25,7 +25,7 @@ export default function NavBar() {
 
       <div className="flex  w-full justify-start ">
         <Link href="/">
-          <Image src="/logo.jpg" alt="logo" width={300} height={300} className="w-25 bg-blend-multiply" />
+          <Image src="/logo.png" alt="logo" width={300} height={300} className="w-20 bg-blend-luminosity" />
         </Link>
       </div>
 
