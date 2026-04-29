@@ -1,1 +1,19 @@
 apiServer/node_modules/
+# environment variables — never commit this
+.env
+
+# python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# embeddings cache — regenerated on startup
+data/place_embeddings.pkl
+
+# virtual environment
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
