@@ -1,19 +1,21 @@
-apiServer/node_modules/
-# environment variables — never commit this
+# env files
 .env
+**/.env
 
-# python cache
-__pycache__/
-*.pyc
-*.pyo
+# node
+node_modules/
+**/node_modules/
 
-# embeddings cache — regenerated on startup
-data/place_embeddings.pkl
+# build outputs
+.next/
+**/.next/
+dist/
+build/
+**/dist/
 
-# virtual environment
-venv/
-.venv/
+# logs
+*.log
 
-# IDE
-.vscode/
-.idea/
+# OS files
+.DS_Store
+**/prisma/generated

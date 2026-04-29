@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum usertype {
+  USER
+  CONTRIBUTOR
+}
+
+enum postType {
+  PLACE
+  EVENT
+  SERVICE
+}
+
+model User {
+  id       String   @id @default(uuid())
+  name     String
+  email    String   @unique
+  password String
+  createAt DateTime @default(now())
+  usertype usertype
+  posts    Post[]
+}
+
+model Post {
+  id     String @id @default(uuid())
+  userId String
+
+  // core fields
+  title       String
+  description String
+  postType    postType
+  state       String?
+
+  // timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // flexible data (activities, types, months, budgets etc.)
+  metadata Json?
+
+  // relations
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images   PostImage[]
+  location Location?
+
+  // type-specific
+  event   Event?
+  service Service?
+
+  // indexes
+  @@index([userId])
+  @@index([postType])
+}
+
+model PostImage {
+  id       String @id @default(uuid())
+  url      String
+  publicId String
+  postId   String
+  order    Int? // optional: for image (cover image, etc.)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+}
+
+model Location {
+  id        String @id @default(uuid())
+  name      String
+  latitude  Float?
+  longitude Float?
+  postId    String @unique
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  postId    String   @unique
+  startTime DateTime
+  endTime   DateTime
+  budgetMin Float? // optional range
+  budgetMax Float?
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Service {
+  id     String @id @default(uuid())
+  postId String @unique
+
+  // pricing options
+  price     Float? // fixed price
+  budgetMin Float? // optional range
+  budgetMax Float?
+
+  contactInfo String
+  isActive    Boolean @default(true)
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
